@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+
+    <bean id="contextApplicationContextProvider" class="com.cmi.sciforma.context.ApplicationContextProvider"></bean>
+
+    <bean id="log4jInitialization" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+       <property name="targetClass" value="org.springframework.util.Log4jConfigurer" />
+       <property name="targetMethod" value="initLogging" />
+       <property name="arguments">
+          <list>
+             <value>config/log4j.xml</value>
+          </list>
+       </property>
+    </bean>
+   
+    <bean id="sciforma" class="com.cmi.sciforma.beans.Connector">
+        <property name="IP" value="sciforma.cmigroupe.com"/>
+        <property name="PORT" value="8080"/>
+        <property name="CONTEXTE" value="sciformaprod"/>
+        <property name="USER" value="psnextadmin"/>
+        <property name="PWD" value="sciforma"/>
+        <property name="DRIVER" value=""/>
+    </bean>
+	
+	<bean id="application_heure" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_heure"/>
+    </bean>
+	<bean id="application_renumerotation" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_renumerotation"/>
+    </bean>
+	<bean id="application_wbs" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_wbs"/>
+    </bean>
+	<bean id="application_capture" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_capture"/>
+    </bean>
+	<bean id="application_decrementation" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation"/>
+    </bean>
+	<bean id="application_decrementation_default_login" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Admin"/>
+    </bean>
+	<bean id="application_decrementation_scriptmailcc" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_scriptmailcc"/>
+    </bean>
+	<bean id="application_decrementation_scriptmail" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_scriptmail"/>
+    </bean>
+	<bean id="application_decrementation_scriptmaildebut" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_scriptmaildebut"/>
+    </bean>
+	<bean id="application_decrementation_deltarw" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_deltarw"/>
+    </bean>
+	<bean id="application_decrementation_capturerw" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_capturerw"/>
+    </bean>
+	<bean id="application_decrementation_job" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_job"/>
+    </bean>
+	<bean id="application_decrementation_lot" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_lot"/>
+    </bean>
+	<bean id="application_decrementation_nature" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_nature"/>
+    </bean>
+	<bean id="application_decrementation_nature_default" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Oui"/>
+    </bean>
+	<bean id="application_decrementation_capture" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_capture"/>
+    </bean>
+	<bean id="application_cloture" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cloture"/>
+    </bean>
+	<bean id="application_cloture_date_cloture" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cloture_date_cloture"/>
+    </bean>
+	<bean id="application_autoaffect" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_autoaffect"/>
+    </bean>
+	<bean id="application_cleanclosetask" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cleanclosetask"/>
+    </bean>
+	<bean id="application_cleanclosetask_cloture_rec" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cleanclosetask_cloture_rec"/>
+    </bean>
+	<bean id="application_cleanclosetask_lot" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cleanclosetask_lot"/>
+    </bean>
+	<bean id="application_cleanclosetask_nature" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_cleanclosetask_nature"/>
+    </bean>
+	<bean id="application_cleanclosetask_nature_default" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Oui"/>
+    </bean>
+	<bean id="application_managetaskstep" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_managetaskstep"/>
+    </bean>
+	<bean id="application_managetaskstep_type_a" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Jalon Contractuel"/>
+    </bean>
+	<bean id="application_managetaskstep_type_b" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Jalon Interne"/>
+    </bean>
+
+<bean id="application_autoadaptif" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_taa"/>
+    </bean>
+	<bean id="application_autoadaptif_scriptmailccdc" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_decrementation_scriptmailcc"/>
+    </bean>
+	<bean id="application_autoadaptif_scriptmaildebutdc" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_taa_scriptMaildebutdc"/>
+    </bean>
+	<bean id="application_autoadaptif_scriptmaildc" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="application_taa_scriptMaildc"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Taux Max"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_AFFRES_ALERTE_TAUX" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Taux Alerte"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Fin TAA Gantt"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_FIN_TAA" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Fin TAA"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_AFFRES_ALERTE_EMAIL" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Alerte Email"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_AFFRES_INACTIF" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Filtre TAA Inactif"/>
+    </bean>
+	<bean id="APPLICATION_AUTOADAPTIF_AFFRES_ERROR" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Filtre TAA Erreur"/>
+    </bean>
+	<bean id="application_autoadaptif_filter_dc_fixe" class="com.cmi.sciforma.beans.SciformaField" >
+        <property name="sciformaField" value="Filtre Report TAA"/>
+    </bean>
+</beans>
