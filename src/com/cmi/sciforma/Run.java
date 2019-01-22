@@ -664,29 +664,29 @@ public class Run {
                         if (t.getBooleanField("TAA vide")) {
                             updateFinishDate = false;
                             updateTauxMax = true;
-                            Logger.info("#1: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT vide " + t.getStringField("Name"));
+                            Logger.info("#01: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT vide " + t.getStringField("Name"));
                         } else {
                             if (res.getDoubleField("Rate") > res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX)) {
                                 updateFinishDate = false;
-                                Logger.info("#2: Rate(" + res.getDoubleField("Rate") + ") > APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX (" + res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX) + ") pour la task " + t.getStringField("Name"));
+                                Logger.info("#02: Rate(" + res.getDoubleField("Rate") + ") > APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX (" + res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX) + ") pour la task " + t.getStringField("Name"));
                             }
                             if (taskFinishDate.before(project.getDateField("As Of Date"))) {
                                 updateFinishDate = false;
                                 updateTauxMax = true;
-                                Logger.info("#3: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before As Of Date pour la task " + t.getStringField("Name"));
+                                Logger.info("#03: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before As Of Date pour la task " + t.getStringField("Name"));
                             }
                             if (t.getDateField("Finish").before(taskFinishDate)) {
                                 updateFinishDate = false;
-                                Logger.info("#4: Finish before APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT pour la task " + t.getStringField("Name"));
+                                Logger.info("#04: Finish before APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT pour la task " + t.getStringField("Name"));
                             }
                             if (taskFinishDate.before(t.getDateField("Start"))) {
                                 updateFinishDate = false;
                                 updateTauxMax = true;
-                                Logger.info("#5: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before Start pour la task " + t.getStringField("Name"));
+                                Logger.info("#05: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before Start pour la task " + t.getStringField("Name"));
                                 ///si le As Of Date du projet > fin taa alors date de fin activité = as of date du projet                          
                             }
                             if (taskFinishDate.before(res.getDateField("Remaining Start"))) {
-                                Logger.info("#6: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before Remaining Start pour la task " + t.getStringField("Name"));
+                                Logger.info("#06: APPLICATION_AUTOADAPTIF_FIN_TAA_GANTT before Remaining Start pour la task " + t.getStringField("Name"));
                                 /**
                                  * Modifcation suite au mail du 6 décembre 2018 à 14:22
                                  * updateFinishDate = false;
@@ -720,7 +720,7 @@ public class Run {
                             if (res.getDoubleField("Rate") >= res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX)) {
                                 message += "Dépassement du Taux Max pour le metier: " + res.getStringField("Métier direct") + " pour l'activité " + t.getStringField("Name");
                                 message += ". <br/>";
-                                Logger.info("Dépassement du Taux Max (Taux actuel:" + res.getDoubleField("Rate") + ") pour le metier: " + res.getStringField("Métier direct") + " pour l'activité " + t.getStringField("Name"));
+                                Logger.info("#07 - Dépassement du Taux Max (Taux actuel:" + res.getDoubleField("Rate") + ") pour le metier: " + res.getStringField("Métier direct") + " pour l'activité " + t.getStringField("Name"));
                                 res.setStringField("Distribution Type", "Fixed Rate-Effort");
                                 res.setDoubleField("Rate", res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX));
                                 res.setStringField("Distribution Type", distribution);
@@ -734,7 +734,35 @@ public class Run {
                                 res.setBooleanField(APPLICATION_AUTOADAPTIF_AFFRES_ALERTE_EMAIL, true);
                             }
                             if (updateTauxMax) {
-                                Logger.info("On force l'activité au taux max");
+                                Logger.info("#08 - On force l'activité au taux max");
+                                res.setStringField("Distribution Type", "Fixed Rate-Effort");
+                                res.setDoubleField("Rate", res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX));
+                                res.setStringField("Distribution Type", distribution);
+                            }
+                            /**
+                             Mail du 20-12-18 17:08 
+                             Ça marche effectivement mieux comme ça! 
+                            Par contre, la charge n’étant plus mise à 0, la ligne 24 du test dynamique fait apparaître un autre bug (doh !) qui n’a rien à voir avec le report de charge.
+
+                            Explication :
+                            Soit une activité comme ci-dessous, sa fin TAA est au 1/11/18
+
+                            Une affectation est en avance mais avec un taux > max
+                            Une affectation est en retard, mais avec un taux < max
+                            La date de fin de l’activité étant > fin TAA, la routine devrait forcer la date de fin à fin TAA
+                            Mais, comme une affectation est en taux > taux max :
+                                          if (res.getDoubleField("Rate") > res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX))
+                                          {
+                                            updateFinishDate = Boolean.valueOf(false);
+                            cette condition demande de ne pas forcer la date de fin de l’activité
+
+                            L’affectation restera en retard, alors que revenir à fin TAA est possible
+
+                            (j’ai créé une ligne spécifique pour mettre ce problème en exergue, mais je n’arrive pas à l’exécuter car l’IT n’a pas encore installé les nlles licences sur DEV. Je te confirme ça dès que je peux)
+
+                             */
+                            if(res.getDateField("Scheduled Finish").after(taskFinishDate) && res.getDoubleField("Rate") < res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX)){
+                                Logger.info("#09 - On force l'affectation au taux max");
                                 res.setStringField("Distribution Type", "Fixed Rate-Effort");
                                 res.setDoubleField("Rate", res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX));
                                 res.setStringField("Distribution Type", distribution);
