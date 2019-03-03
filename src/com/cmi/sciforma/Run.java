@@ -766,6 +766,12 @@ public class Run {
                                 res.setStringField("Distribution Type", "Fixed Rate-Effort");
                                 res.setDoubleField("Rate", res.getDoubleField(APPLICATION_AUTOADAPTIF_AFFRES_MAX_TAUX));
                                 res.setStringField("Distribution Type", distribution);
+                                /**
+                                 Mail du 06-02-19
+                                 * Raison : dans la logique de la routine (du moins dans la version du code que j’ai reçu), on considère que  si une affectation dépasse le taux max, ça ne sert à rien de forcer la date de fin de l’activité à la date de l’objectif (fin TAA). C’est pourtant ce qu’il convient de faire dans ce cas.
+                                 */
+                                if(t.getDateField("Finish").before(taskFinishDate))
+                                    t.setDateField("Finish", taskFinishDate);
                             }
                         }
 
